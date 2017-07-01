@@ -1,9 +1,13 @@
 <resources>
-    <string name="app_name">ReflexWorld</string>
+    <string name="app_name">World Clock</string>
 
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="back_button">Back</string>
     <string name="TimeZone_IST">Asia/Kolkata</string>
-    <string name="Time_Format">EEEE, dd MMMM yyyy hh:mm:ss a</string>
+    <string name="Time_Format">EEEE, dd MMMM yyyy hh:mm a</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="exitMessage">Click yes to exit!</string>
+    <string name="exitMessageTitle">Exit Application?</string>
 </resources>

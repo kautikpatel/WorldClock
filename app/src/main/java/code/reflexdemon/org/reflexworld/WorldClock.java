@@ -91,9 +91,6 @@ public class WorldClock extends AppCompatActivity {
             if (actionBar != null) {
                 actionBar.show();
             }
-//            if (null != tableMaincontent) {
-//                tableMaincontent.setHorizontalGravity(getNextGravity());
-//            }
             mControlsView.setVisibility(View.VISIBLE);
         }
     };
@@ -118,14 +115,6 @@ public class WorldClock extends AppCompatActivity {
             return false;
         }
     };
-
-    private synchronized int getNextGravity() {
-        if (Integer.MAX_VALUE == gravityPointer) {
-            gravityPointer = 0;
-        }
-        int modulus = ++gravityPointer % GRAVITY_LIST.length;
-        return GRAVITY_LIST[modulus];
-    }
 
 
     @Override
@@ -166,6 +155,7 @@ public class WorldClock extends AppCompatActivity {
         String savedValue = getSavedValue(DEFAULT_TIME_ZONE_KEY);
         spinnerAvailableID.setSelection(Arrays.asList(idArray).indexOf(savedValue), true);
         getGMTTime();
+        setSelectedText(TimeZone.getTimeZone(savedValue));
 
         spinnerAvailableID.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -177,25 +167,7 @@ public class WorldClock extends AppCompatActivity {
                                 .getItemAtPosition(position));
 
                         TimeZone timezone = TimeZone.getTimeZone(selectedId);
-                        String TimeZoneName = timezone.getDisplayName();
-
-                        int TimeZoneOffset = timezone.getRawOffset()
-                                / (60 * 1000);
-
-                        int hrs = TimeZoneOffset / 60;
-                        int mins = TimeZoneOffset % 60;
-
-                        miliSeconds = miliSeconds + timezone.getRawOffset();
-
-                        resultdate = new Date(miliSeconds);
-                        System.out.println(sdf.format(resultdate));
-
-                        textTimeZone.setText(TimeZoneName + " : GMT " + hrs + "."
-                                + mins);
-                        currentTimeZoneTime.setTimeZone(timezone.getID());
-                        saveTimeZonePrefs(DEFAULT_TIME_ZONE_KEY, timezone.getID());
-                        currentTimeZoneTime.setFormat12Hour(getString(R.string.Time_Format));
-                        miliSeconds = 0;
+                        setSelectedText(timezone);
                     }
 
                     @Override
@@ -216,6 +188,29 @@ public class WorldClock extends AppCompatActivity {
                     }
                 }
         );
+    }
+
+    private void setSelectedText(TimeZone timezone) {
+
+        String TimeZoneName = timezone.getDisplayName();
+
+        int TimeZoneOffset = timezone.getRawOffset()
+                / (60 * 1000);
+
+        int hrs = TimeZoneOffset / 60;
+        int mins = TimeZoneOffset % 60;
+
+        miliSeconds = miliSeconds + timezone.getRawOffset();
+
+        resultdate = new Date(miliSeconds);
+        System.out.println(sdf.format(resultdate));
+
+        textTimeZone.setText(TimeZoneName + " : GMT " + hrs + "."
+                + mins);
+        currentTimeZoneTime.setTimeZone(timezone.getID());
+        saveTimeZonePrefs(DEFAULT_TIME_ZONE_KEY, timezone.getID());
+        currentTimeZoneTime.setFormat12Hour(getString(R.string.Time_Format));
+        miliSeconds = 0;
     }
 
     private void loadImages() {
@@ -317,11 +312,11 @@ public class WorldClock extends AppCompatActivity {
 
     private void callOnExit() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setTitle("Exit Application?");
+        alertDialogBuilder.setTitle(R.string.exitMessageTitle);
         alertDialogBuilder
-                .setMessage("Click yes to exit!")
+                .setMessage(R.string.exitMessage)
                 .setCancelable(false)
-                .setPositiveButton("Yes",
+                .setPositiveButton(R.string.yes,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 moveTaskToBack(true);
@@ -330,7 +325,7 @@ public class WorldClock extends AppCompatActivity {
                             }
                         })
 
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                         dialog.cancel();
